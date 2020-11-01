@@ -121,5 +121,6 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
         self.groupBox.setTitle(_translate("MainWindow", "Командная строка"))
+        self.comandLine.setText(_translate("MainWindow", "D:\\ucheba\\4 курс\\срв\\LR3\\dist\\process.exe"))
         self.startBt.setText(_translate("MainWindow", "Пуск"))
         self.sendBt.setText(_translate("MainWindow", "Send"))

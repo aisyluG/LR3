@@ -1,27 +1,30 @@
-from PyQt5.QtCore import QObject, pyqtSignal
+from PyQt5.QtCore import QObject, pyqtSignal, QTimerEvent
 
 class ConsoleReader(QObject):
     readed = pyqtSignal(str)
 
-    def __init__(self, semaphore, timer):
+    def __init__(self, semaphore_timer, semaphore_start_reading):
         QObject.__init__(self)
         self.process = None
-        self.semaphore = semaphore
-        self.timer = timer
+        # self.timer = timer
+        self.semaphore_timer = semaphore_timer
+        self.semaphore_reading = semaphore_start_reading
+
     def set_pipe(self, process):
-        self.process = process.stdout
+        self.process = process
 
     def run(self):
-        text = []
-        while len(text) != 0 or text == []:
-            self.semaphore.acquire()
-            print('again')
-            self.timer.start(2000)
-            if self.process is not None:
+        text = 1
+        while text != '':
+            if self.process is not None and self.process.poll() is None:
+                # self.semaphore_reading.acq+uire()
                 print('YEAR')
-                text = self.process.readline()
+                text = self.process.stdout.readline()
+                self.semaphore_reading.release()
+                self.semaphore_timer.release()
                 print(text, '1')
                 if text != '':
-                    self.readed.emit(text)
-            self.semaphore.release()
-            self.timer.stop()
+                    self.readed.emit('Output:' + text)
+            else:
+                print('ended')
+
